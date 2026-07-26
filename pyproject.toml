@@ -1,0 +1,14 @@
+[project]
+name = "cscoach-backend"
+version = "0.1.0"
+description = "Counter-Strike coaching and analytics backend"
+requires-python = ">=3.14"
+dependencies = []
+
+[build-system]
+requires = [
+    "setuptools>=68"
+]
+build-backends = [
+    "setuptools.build_meta"
+]
