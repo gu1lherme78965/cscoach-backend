@@ -1,0 +1,26 @@
+from demoparser2 import DemoParser
+
+class CS2DemoParser:
+    """
+    Wrapper around demoparser2 that exposes
+    CSCoach-friendly methods.
+    """
+
+    def __init__(self, demo_file_path: str):
+        self.demo_path = demo_file_path
+        self.parser = DemoParser(demo_file_path)
+
+    def get_player_info(self):
+        return self.parser.parse_player_info()
+
+    def get_grenades(self):
+        return self.parser.parse_grenades()
+
+    def get_events(self):
+        return self.parser.parse_events()
+
+    def list_game_events(self):
+        return self.parser.list_game_events()
+
+    def print_self(self):
+        print(dir(self.parser))
