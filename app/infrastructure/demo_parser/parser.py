@@ -22,5 +22,8 @@ class CS2DemoParser:
     def list_game_events(self):
         return self.parser.list_game_events()
 
+    def parse_specific_game_event(self, event_name: str):
+        return self.parser.parse_event(event_name)
+
     def print_self(self):
         print(dir(self.parser))
