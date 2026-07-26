@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from ..events.event import Event
+from ..enums.teams import Team
 
 @dataclass
 class Round:
@@ -9,6 +10,5 @@ class Round:
     """
 
     round_number: int
-    winning_team: str
+    winning_team: Team
     events: list[Event]  # List of events that occurred during the round
-    

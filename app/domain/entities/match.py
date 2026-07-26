@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 
 from .round import Round
+from ..enums.maps import Map
 
 @dataclass
 class Match:
@@ -8,6 +9,5 @@ class Match:
     Represents a match in the game.
     """
 
-    map_name: str
+    map_name: Map
     rounds: list[Round]  # List of rounds in the match
-    
