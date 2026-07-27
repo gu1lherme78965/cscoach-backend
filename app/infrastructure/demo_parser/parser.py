@@ -30,3 +30,8 @@ class CS2DemoParser:
 
     def parse_ticks(self, props):
         return self.parser.parse_ticks(props)
+
+    ###
+
+    def get_header(self):
+        return self.parser.parse_header()

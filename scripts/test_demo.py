@@ -13,3 +13,6 @@ for event_name, event_df in events:
 
 ticks = parser.parse_ticks(["health", "X"])
 print(ticks)
+
+parser.print_self()
+print(parser.get_header())
