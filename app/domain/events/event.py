@@ -3,6 +3,7 @@ from datetime import timedelta
 from uuid import UUID
 
 from ..value_objects.position import Position
+from ..enums.event_types import EventType
 
 @dataclass(frozen=True)
 class Event:
@@ -10,6 +11,9 @@ class Event:
     Represents an event that occurs in the game world.
     """
 
-    timestamp: timedelta
-    player_id: UUID
-    position: Position
+    tick: int
+    event_type: EventType
+
+    def __init__(self, tick: int, type: EventType = EventType.BASE):
+        self.tick = tick
+        self.event_type = type

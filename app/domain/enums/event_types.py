@@ -1,5 +1,4 @@
 from enum import Enum
 
 class EventType(Enum):
-    KILL = "Kill"
-    DAMAGE = "Damage"
+    BASE_EVENT = "Base Event"

@@ -10,14 +10,14 @@ class CS2DemoParser:
         self.demo_path = demo_file_path
         self.parser = DemoParser(demo_file_path)
 
+    def get_all_events(self):
+        return self.parser.parse_events(["all"])
+
     def get_player_info(self):
         return self.parser.parse_player_info()
 
     def get_grenades(self):
         return self.parser.parse_grenades()
-
-    def get_events(self):
-        return self.parser.parse_events()
 
     def list_game_events(self):
         return self.parser.list_game_events()
@@ -27,3 +27,6 @@ class CS2DemoParser:
 
     def print_self(self):
         print(dir(self.parser))
+
+    def parse_ticks(self, props):
+        return self.parser.parse_ticks(props)

@@ -1,15 +1,15 @@
 from app.infrastructure.demo_parser.parser import CS2DemoParser
 
+STEAMID = 76561198400981116
+
 parser = CS2DemoParser("data/demos/test_demo.dem")
 
-players = parser.get_player_info()
-grenades = parser.get_grenades()
-event_list = parser.list_game_events()
-events = parser.parse_specific_game_event("flashbang_detonate")
+events = parser.get_all_events()
+print(type(events))
+for event_name, event_df in events:
+    print(f"Event: {event_name}")
+    if "user_steamid" in event_df.columns:
+        print(event_df[event_df["user_steamid"] == str(STEAMID)])
 
-print(players)
-print(grenades)
-print(event_list)
-print(list(events))
-
-parser.print_self()
+ticks = parser.parse_ticks(["health", "X"])
+print(ticks)
