@@ -1,5 +1,7 @@
 from app.infrastructure.demo_parser.parser import CS2DemoParser
 
+from app.domain.entities.player import Player
+
 STEAMID = 76561198400981116
 
 parser = CS2DemoParser("data/demos/test_demo.dem")
@@ -11,8 +13,10 @@ for event_name, event_df in events:
     if "user_steamid" in event_df.columns:
         print(event_df[event_df["user_steamid"] == str(STEAMID)])
 
-ticks = parser.parse_ticks(["health", "X"])
-print(ticks)
-
-parser.print_self()
-print(parser.get_header())
+player_info  = parser.get_player_info()
+print(player_info)
+for index, row in player_info.iterrows():
+    name = row["name"]
+    id = row["steamid"]
+    team = row["team_number"]
+    print(Player(id, name, team))

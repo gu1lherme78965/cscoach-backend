@@ -10,4 +10,5 @@ class Player:
 
     id: SteamID
     name: str
+    team: int
     

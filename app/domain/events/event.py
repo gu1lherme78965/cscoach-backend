@@ -12,8 +12,4 @@ class Event:
     """
 
     tick: int
-    event_type: EventType
-
-    def __init__(self, tick: int, type: EventType = EventType.BASE_EVENT):
-        self.tick = tick
-        self.event_type = type
+    event_type: EventType = EventType.BASE_EVENT

@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
 
-from ..events import Event
+from ..events.event import Event
 
 @dataclass
 class EventTimeline:
