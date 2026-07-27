@@ -10,9 +10,6 @@ class EventTimeline:
 
     events: list[Event] = field(default_factory=list)
 
-    def __init__(self, events: list[Event] = []):
-        self.events = events
-
     def add_event(self, event: Event):
         self.events.append(event)
 
