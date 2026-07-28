@@ -6,7 +6,7 @@ from ..value_objects.view_angle import ViewAngle
 from ..value_objects.steamid import SteamID
 from ..entities.weapon import Weapon
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, slots=True)
 class PlayerState:
     player_steamid: SteamID
 
