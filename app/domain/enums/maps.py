@@ -1,6 +1,7 @@
 from enum import Enum
 
 class Map(Enum):
+    UNKNOWN = "Unknown"
     ANCIENT = "Ancient"
     ANUBIS = "Anubis"
     CACHE = "Cache"

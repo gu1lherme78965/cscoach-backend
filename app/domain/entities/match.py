@@ -17,3 +17,10 @@ class Match:
     players: list[Player]
     event_timeline: EventTimeline
     tick_store: TickStore
+
+    def summarize(self):
+        print("________________")
+        print(f"Map: {self.map}")
+        print("Players:")
+        for player in self.players:
+            print(f"    {player.name} - Team {player.team}")

@@ -28,7 +28,7 @@ class CS2DemoParser:
     def print_self(self):
         print(dir(self.parser))
 
-    def parse_ticks(self, props):
+    def parse_ticks(self, props: list):
         return self.parser.parse_ticks(props)
 
     ###
