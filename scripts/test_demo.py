@@ -1,5 +1,4 @@
 from app.infrastructure.demo_parser.parser import CS2DemoParser
-from app.application.services.demo_analyzer import DemoAnalyzer
 
 from app.domain.entities.player import Player
 

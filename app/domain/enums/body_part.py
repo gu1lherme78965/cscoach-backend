@@ -1,8 +1,13 @@
 from enum import Enum
 
 class BodyPart(Enum):
+    UNKNOWN = "Unknown"
     HEAD = "Head"
-    CHEST_AND_ARMS = "Chest and Arms"
-    STOMACH_AND_PELVIS = "Stomach and Pelvis"
-    LEGS = "Legs"
+    CHEST = "Chest"
+    RIGHT_ARM = "Right Arm"
+    LEFT_ARM = "Left Arm"
+    STOMACH = "Stomach"
+    RIGHT_LEG = "Right Leg"
+    LEFT_LEG = "Left Leg"
+    BODY = "Body"
     
