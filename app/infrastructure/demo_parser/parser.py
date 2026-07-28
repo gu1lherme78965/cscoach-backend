@@ -5,17 +5,28 @@ from app.domain.entities.tick import Tick
 from app.domain.timeline.tick_store import TickStore
 from app.domain.timeline.event_timeline import EventTimeline
 from app.domain.state.player_state import PlayerState
-from app.domain.events.player_death_event import PlayerDeathEvent
-from app.domain.events.weapon_fire_event import WeaponFireEvent
 from app.domain.enums.maps import Map
 from app.domain.enums.body_part import BodyPart
+from app.domain.enums.win_condition import WinCondition
+from app.domain.enums.teams import Team
 from app.domain.value_objects.steamid import SteamID
 from app.domain.value_objects.position import Position
 from app.domain.value_objects.velocity import Velocity
 from app.domain.value_objects.view_angle import ViewAngle
 from app.infrastructure.demo_parser.weapon_mapper import convert_weapon_name, get_unknown_weapons
+from app.domain.events import (
+    PlayerDeathEvent,
+    PlayerHurtEvent,
+    WeaponFireEvent,
+    BeginNewMatchEvent,
+    RoundStartEvent,
+    RoundEndEvent,
+)
 
 unknown_maps = set()
+unknown_teams = set()
+unknown_locations = set()
+unknown_win_conditions = set()
 steamid_cache = dict()
 
 class CS2DemoParser:
@@ -66,6 +77,13 @@ class CS2DemoParser:
             print(f"Encountered unknown weapons in this game: {unknown_weapons}")
         if (unknown_maps):
             print(f"Encountered unknown maps in this game: {unknown_maps}")
+        if (unknown_locations):
+            print(f"Encountered unknown locations in this game: {unknown_locations}")
+        if (unknown_teams):
+            print(f"Encountered unknown teams in this game: {unknown_teams}")
+        if (unknown_win_conditions):
+            print(f"Encountered unknown win conditions in this game: {unknown_win_conditions}")
+
 
         self.match = Match(map, [], players, None, None)
         return self.match
@@ -87,7 +105,7 @@ class CS2DemoParser:
             case "de_mirage":
                 return Map.MIRAGE
             case _:
-                if type(name) == str:
+                if type(name) == str and name:
                     unknown_maps.add(name)
                 return Map.UNKNOWN
 
@@ -138,7 +156,7 @@ class CS2DemoParser:
             ticks=tick_dict
         )
 
-    def convert_hit_location(self, location: str):
+    def convert_hit_location(self, location: str) -> BodyPart:
         match location:
             case "head":
                 return BodyPart.HEAD
@@ -157,20 +175,51 @@ class CS2DemoParser:
             case "generic":
                 return BodyPart.UNKNOWN
             case _:
-                print(f"hit location -> {location}")
+                if type(location) == str and location:
+                    unknown_locations.add(location)
                 return BodyPart.UNKNOWN
 
+    def convert_win_condition(self, condition: str) -> WinCondition: 
+        match condition:
+            case "ct_killed":
+                return WinCondition.CT_ELIMINATED
+            case "t_killed":
+                return WinCondition.T_ELIMINATED
+            case "bomb_exploded":
+                return WinCondition.BOMB_EXPLOSION
+            case _:
+                if type(condition) == str and condition:
+                    unknown_win_conditions.add(condition)
+                return WinCondition.UNKNOWN
+
+    def convert_team(self, team: str) -> Team:
+        match team:
+            case "CT":
+                return Team.COUNTER_TERRORIST
+            case "T":
+                return Team.TERRORIST
+            case _:
+                if type(team) == str and team:
+                    unknown_teams.add(team)
+                return Team.UNKNOWN
+
     def build_event_timeline(self) -> EventTimeline:
+        start_tick = self.get_match_start_tick()
         events = list()
 
-        events.extend(self.build_player_death_events())
-        events.extend(self.build_weapon_fire_events())
+        events.extend(self.build_player_death_events(start_tick))
+        events.extend(self.build_weapon_fire_events(start_tick))
+        events.extend(self.build_player_hurt_events(start_tick))
+        events.extend(self.build_begin_new_match_events(start_tick))
+        events.extend(self.build_round_start_events(start_tick))
+        events.extend(self.build_round_end_events(start_tick))
 
         events.sort(key=lambda e: e.tick)
 
-    def build_player_death_events(self) -> list[PlayerDeathEvent]:
+    def build_player_death_events(self, start_tick: int) -> list[PlayerDeathEvent]:
         events = list()
         df = self.parser.parse_event("player_death")
+        df = df[df["tick"] >= start_tick]
 
         for row in df.itertuples(index=False):
             events.append(PlayerDeathEvent(
@@ -190,9 +239,10 @@ class CS2DemoParser:
             ))
         return events
 
-    def build_weapon_fire_events(self) -> list[WeaponFireEvent]:
+    def build_weapon_fire_events(self, start_tick: int) -> list[WeaponFireEvent]:
         events = list()
         df = self.parser.parse_event("weapon_fire", player=["X", "Y", "Z", "pitch", "yaw"])
+        df = df[df["tick"] >= start_tick]
 
         for row in df.itertuples(index=False):
             events.append(WeaponFireEvent(
@@ -207,4 +257,60 @@ class CS2DemoParser:
                 user_yaw=row.user_yaw
             ))
         return events
+
+    def build_player_hurt_events(self, start_tick: int) -> list[PlayerHurtEvent]:
+        events= list()
+        df = self.parser.parse_event("player_hurt")
+        df = df[df["tick"] >= start_tick]
+
+        for row in df.itertuples(index=False):
+            events.append(PlayerHurtEvent(
+                tick=row.tick,
+                attacker_id=row.attacker_steamid,
+                victim_id=row.user_steamid,
+                weapon=convert_weapon_name(row.weapon),
+                hit_location=self.convert_hit_location(row.hitgroup),
+                dmg_health=row.dmg_health,
+                dmg_armor=row.dmg_armor,
+                remaining_health=row.health,
+                remaining_armor=row.armor
+            ))
+        return events
+
+    def build_begin_new_match_events(self, start_tick: int) -> list[BeginNewMatchEvent]:
+        events = list()
+        df = self.parser.parse_event("begin_new_match")
+        df = df[df["tick"] >= start_tick]
+
+        for row in df.itertuples(index=False):
+            events.append(BeginNewMatchEvent(
+                tick=row.tick
+            ))
+        return events
+
+    def build_round_start_events(self, start_tick: int) -> list[RoundStartEvent]:
+        events = list()
+        df = self.parser.parse_event("round_start")
+        df = df[df["tick"] >= start_tick]
+
+        for row in df.itertuples(index=False):
+            events.append(RoundStartEvent(
+                tick=row.tick,
+                round_number=row.round
+            ))
+        return events
+
+    def build_round_end_events(self, start_tick: int) -> list[RoundStartEvent]:
+            events = list()
+            df = self.parser.parse_event("round_end")
+            df = df[df["tick"] >= start_tick]
     
+            for row in df.itertuples(index=False):
+                events.append(RoundEndEvent(
+                    tick=row.tick,
+                    round_number=row.round,
+                    win_condition=self.convert_win_condition(row.reason),
+                    winning_team=self.convert_team(row.winner)
+                ))
+            return events
+        

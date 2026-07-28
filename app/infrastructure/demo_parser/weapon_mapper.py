@@ -15,7 +15,7 @@ flashbang = ["flashbang", "weapon_flashbang"]
 galil_ar = ["galilar", "weapon_galilar"]
 glock_18 = ["glock", "weapon_glock"]
 he_grenade = ["hegrenade", "weapon_hegrenade"]
-incendiary_grenade = ["Incendiary Grenade", "weapon_incgrenade"]
+incendiary_grenade = ["Incendiary Grenade", "weapon_incgrenade", "inferno"]
 knifes = ["knife", "knife_t", "weapon_knife_t", "weapon_knife"]
 m4a1_s = ["m4a1_silencer", "weapon_m4a1_silencer"]
 m4a4 = ["m4a1", "weapon_m4a1"]
@@ -25,6 +25,7 @@ mp7 = ["mp7", "weapon_mp7"]
 mp9 = ["mp9"]
 molotov = ["molotov", "weapon_molotov"]
 nova = ["nova", "weapon_nova"]
+p2000 = ["hkp2000"]
 p250 = ["p250", "weapon_p250"]
 p90 = ["p90", "weapon_p90"]
 r8_revolver =["revolver", "weapon_revolver"]
@@ -60,6 +61,7 @@ WEAPON_MAP = {
     **{name: Weapon.MP9 for name in mp9},
     **{name: Weapon.MOLOTOV for name in molotov},
     **{name: Weapon.NOVA for name in nova},
+    **{name: Weapon.P2000 for name in p2000},
     **{name: Weapon.P250 for name in p250},
     **{name: Weapon.P90 for name in p90},
     **{name: Weapon.R8_REVOLVER for name in r8_revolver},
@@ -74,7 +76,7 @@ WEAPON_MAP = {
 
 def convert_weapon_name(name: str) -> Weapon:
     if name not in WEAPON_MAP:
-        if type(name) == str:
+        if type(name) == str and name:
             unknown_weapons.add(name)
         return Weapon.UNKNOWN
     return WEAPON_MAP[name]

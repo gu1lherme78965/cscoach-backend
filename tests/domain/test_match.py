@@ -3,7 +3,6 @@ from app.domain.entities.match import Match
 from app.domain.entities.round import Round
 from app.domain.events.event import Event
 from app.domain.value_objects.steamid import SteamID
-from app.domain.enums.event_types import EventType
 from app.domain.enums.maps import Map
 
 def test_create_match_with_rounds_and_events():
@@ -13,12 +12,10 @@ def test_create_match_with_rounds_and_events():
 
     # Create events
     event1 = Event(
-        tick=498,
-        event_type=EventType.BASE_EVENT
+        tick=498
     )
     event2 = Event(
-        tick=30,
-        event_type=EventType.BASE_EVENT
+        tick=30
     )
 
     # Create rounds
@@ -44,5 +41,4 @@ def test_create_match_with_rounds_and_events():
     assert match.rounds[0].winning_team == "Terrorists"
     assert len(match.rounds[0].events) == 2
     assert match.rounds[0].events[0].tick == 498
-    assert match.rounds[0].events[1].event_type == EventType.BASE_EVENT
     
