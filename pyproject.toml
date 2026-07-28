@@ -11,7 +11,9 @@ dependencies = [
 dev = [
     "pytest",
     "ruff",
-    "mypy"
+    "mypy",
+    "snakeviz",
+    "line-profiler"
 ]
 
 [build-system]

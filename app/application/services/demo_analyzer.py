@@ -2,6 +2,7 @@ from app.domain.entities.match import Match
 from app.domain.entities.player import Player
 from app.domain.entities.tick import Tick
 from app.domain.timeline.tick_store import TickStore
+from app.domain.timeline.event_timeline import EventTimeline
 from app.domain.state.player_state import PlayerState
 from app.domain.enums.maps import Map
 from app.domain.enums.weapons import Weapon
@@ -11,10 +12,10 @@ from app.domain.value_objects.position import Position
 from app.domain.value_objects.velocity import Velocity
 from app.domain.value_objects.view_angle import ViewAngle
 
-class DemoAnalyzer:
+unknown_weapons = set()
+unknown_maps = set()
 
-    def __init__(self):
-        pass
+class DemoAnalyzer:
 
     @staticmethod
     def analyze(file_path: str) -> Match:
@@ -26,7 +27,14 @@ class DemoAnalyzer:
 
         tick_store = DemoAnalyzer.build_tick_store(parser)
 
-        # TODO populate EventTimeline, TickStore and list of Rounds
+        event_timeline = DemoAnalyzer.build_event_timeline(parser)
+
+        # TODO populate EventTimeline and list of Rounds
+        if (unknown_weapons):
+            print(f"Encountered unknown weapons in this game: {unknown_weapons}")
+        if (unknown_maps):
+            print(f"Encountered unknown maps in this game: {unknown_maps}")
+
         return Match(map, [], players, None, tick_store)
     
     @staticmethod
@@ -48,6 +56,8 @@ class DemoAnalyzer:
             case "de_mirage":
                 return Map.MIRAGE
             case _:
+                if type(name) == str:
+                    unknown_maps.add(name)
                 return Map.UNKNOWN
 
     @staticmethod
@@ -120,8 +130,8 @@ class DemoAnalyzer:
             case "Zeus x27":
                 return Weapon.ZEUS_X27
             case _:
-                if (name != "nan ") and (name!= "nan"): 
-                    print(f"unknown weapon -> {name}")
+                if type(name) == str: 
+                    unknown_weapons.add(name)
                 return Weapon.UNKNOWN
 
     @staticmethod
@@ -172,4 +182,7 @@ class DemoAnalyzer:
         return TickStore(
             ticks=tick_dict
         )
-    
+
+    @staticmethod
+    def build_event_timeline(parser: CS2DemoParser) -> EventTimeline:
+        pass

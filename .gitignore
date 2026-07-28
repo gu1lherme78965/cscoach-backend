@@ -37,6 +37,9 @@ Thumbs.db
 # Logs
 *.log
 
+# Profiling
+*.prof
+
 # Local data
 data/demos/*
 data/cache/*

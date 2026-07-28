@@ -6,8 +6,8 @@ from app.domain.entities.player import Player
 STEAMID = 76561198400981116
 
 match = DemoAnalyzer.analyze("data/demos/test_demo.dem")
-parser = CS2DemoParser("data/demos/test_demo.dem")
-parser.print_self()
+#parser = CS2DemoParser("data/demos/test_demo.dem")
+#parser.print_self()
 
 """
 events = parser.get_all_events()
