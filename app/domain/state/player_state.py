@@ -16,7 +16,6 @@ class PlayerState:
 
     health: int
     armor: int
-    money: int
 
     active_weapon: Weapon
 

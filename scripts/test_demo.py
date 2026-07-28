@@ -28,6 +28,4 @@ for index, row in player_info.iterrows():
     print(Player(id, name, team))
 """
 
-print(parser.parse_ticks(["team_name", "usercmd_input_history"]))
-
 #match.summarize()

@@ -1,12 +1,14 @@
 from enum import Enum
 
 class Weapon(Enum):
-    AK47 = "AK-47",
+    UNKNOWN = "Unknown"
+    AK_47 = "AK-47",
     AUG = "AUG",
     AWP = "AWP",
     BAYONET = "Bayonet",
     BOWIE_KNIFE = "Bowie Knife",
     BUTTERFLY_KNIFE = "Butterfly Knife",
+    C4_EXPLOSIVE = "C4 Explosive"
     CLASSIC_KNIFE = "Classic Knife",
     CZ75_AUTO = "CZ75-Auto",
     DESERT_EAGLE = "Desert Eagle",
@@ -14,13 +16,17 @@ class Weapon(Enum):
     FALCHION_KNIFE = "Falchion Knife",
     FAMAS = "FAMAS",
     FIVE_SEVEN = "Five-SeveN",
+    FLASHBANG = "Flashbang",
     FLIP_KNIFE = "Flip Knife",
     G3SG1 = "G3SG1",
     GALIL_AR = "Galil AR",
     GLOCK_18 = "Glock-18",
     GUT_KNIFE = "Gut Knife",
+    HE_GRENADE = "HE Grenade",
     HUNTSMAN_KNIFE = "Huntsman Knife",
+    INCENDIARY_GRENADE = "Incendiary Grenade"
     KARAMBIT = "Karambit",
+    KNIFE = "Knife",
     KUKRI_KNIFE = "Kukri Knife",
     M249 = "M249",
     M4A1_S = "M4A1-S",
@@ -33,6 +39,7 @@ class Weapon(Enum):
     MP9 = "MP9",
     NAVAJA_KNIFE = "Navaja Knife",
     NEGEV = "Negev",
+    MOLOTOV = "Molotov"
     NOMAD_KNIFE = "Nomad Knife",
     NOVA = "Nova",
     P2000 = "P2000",
@@ -46,6 +53,7 @@ class Weapon(Enum):
     SG_553 = "SG 553",
     SHADOW_DAGGERS = "Shadow Daggers",
     SKELETON_KNIFE = "Skeleton Knife",
+    SMOKE_GRENADE = "Smoke Grenade",
     SSG_08 = "SSG 08",
     STILETTO_KNIFE = "Stiletto Knife",
     SURVIVAL_KNIFE = "Survival Knife",
