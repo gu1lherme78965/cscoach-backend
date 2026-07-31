@@ -67,7 +67,7 @@ class CS2DemoParser:
 
         players = self.extract_player_list()
 
-        #tick_store = self.build_tick_store()
+        tick_store = self.build_tick_store()
 
         event_timeline = self.build_event_timeline()
 

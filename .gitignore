@@ -41,9 +41,7 @@ Thumbs.db
 *.prof
 
 # Local data
-data/demos/*
-data/cache/*
-data/processed/*
+data/*
 
 # Keep directory structure
 !data/demos/.gitkeep
