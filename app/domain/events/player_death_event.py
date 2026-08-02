@@ -19,6 +19,8 @@ class PlayerDeathEvent(Event):
     dmg_armor: int
 
     attacker_in_air: bool
+    attacker_is_blind: bool
+    is_blind_assist: bool
     is_noscope: bool
     is_penetrated: bool
     is_through_smoke: bool

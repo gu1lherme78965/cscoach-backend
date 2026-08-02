@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from .round import Round
 from .player import Player
@@ -12,11 +12,11 @@ class Match:
     Represents a match in the game.
     """
 
-    map: Map
-    rounds: list[Round]  # List of rounds in the match
-    players: list[Player]
-    event_timeline: EventTimeline
-    tick_store: TickStore
+    map: Map = Map.UNKNOWN  # Map on which the match was played
+    rounds: list[Round] = field(default_factory=list)  # List of rounds in the match
+    players: list[Player] = field(default_factory=list)
+    event_timeline: EventTimeline | None = None
+    tick_store: TickStore | None = None
 
     def summarize(self):
         print("________________")

@@ -1,11 +1,11 @@
-from app.infrastructure.demo_parser.parser import CS2DemoParser
+from app.infrastructure.match_assembling.match_assembler import MatchAssembler
 
 from app.domain.entities.player import Player
 
 STEAMID = 76561198400981116
 
-parser = CS2DemoParser("data/demos/test_demo.dem")
-match = parser.parse()
+assembler = MatchAssembler("data/demos/test_demo.dem")
+match = assembler.assemble_match()
 #parser = CS2DemoParser("data/demos/test_demo.dem")
 #parser.print_self()
 
