@@ -1,8 +1,5 @@
 from dataclasses import dataclass
 
-from ..value_objects.position import Position
-from ..value_objects.velocity import Velocity
-from ..value_objects.view_angle import ViewAngle
 from ..value_objects.steamid import SteamID
 from ..entities.weapon import Weapon
 
@@ -10,9 +7,16 @@ from ..entities.weapon import Weapon
 class PlayerState:
     player_steamid: SteamID
 
-    position: Position
-    velocity: Velocity
-    view_angle: ViewAngle
+    x: float
+    y: float
+    z: float
+
+    velocity_x: float
+    velocity_y: float
+    velocity_z: float
+
+    pitch: float
+    yaw: float
 
     health: int
     armor: int

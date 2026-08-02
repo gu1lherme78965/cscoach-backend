@@ -16,6 +16,7 @@ from app.infrastructure.match_assembling.mappers.weapon_mapper import get_unknow
 from app.infrastructure.match_assembling.mappers.map_mapper import get_unknown_maps, convert_map_name
 from app.infrastructure.match_assembling.mappers.win_condition_mapper import get_unknown_win_conditions, convert_win_condition
 from app.infrastructure.match_assembling.mappers.team_mapper import get_unknown_teams, convert_team_name
+from app.infrastructure.match_assembling.mappers.hit_location_mapper import get_unknown_locations, convert_hit_location
 from app.infrastructure.match_assembling.builders import (
     PlayerDeathEventBuilder,
     PlayerHurtEventBuilder,
@@ -50,12 +51,13 @@ class MatchAssembler:
         self.match = Match()
 
     def assemble_match(self) -> Match:
+        # TODO
         header = self.parser.get_header()
         players = self.parser.extract_player_list()
         player_info = self.parser.get_player_info()
-        map = convert_map_name(header["map_name"])
+        self.match.map = convert_map_name(header["map_name"])
 
-        # tick_store = self.build_tick_store()
+        tick_store = self.build_tick_store()
 
         event_timeline = self.build_event_timeline()
 
@@ -63,41 +65,19 @@ class MatchAssembler:
         unknown_maps = get_unknown_maps()
         unknown_win_conditions = get_unknown_win_conditions()
         unknown_teams = get_unknown_teams()
+        unknown_locations = get_unknown_locations()
         if (unknown_weapons):
             print(f"Encountered unknown weapons in this game: {unknown_weapons}")
         if (unknown_maps):
             print(f"Encountered unknown maps in this game: {unknown_maps}")
-        if (self.unknown_locations):
-            print(f"Encountered unknown locations in this game: {self.unknown_locations}")
+        if (unknown_locations):
+            print(f"Encountered unknown locations in this game: {unknown_locations}")
         if (unknown_teams):
             print(f"Encountered unknown teams in this game: {unknown_teams}")
         if (unknown_win_conditions):
             print(f"Encountered unknown win conditions in this game: {unknown_win_conditions}")
 
         return self.match
-
-    def convert_hit_location(self, location: str) -> BodyPart:
-        match location:
-            case "head":
-                return BodyPart.HEAD
-            case "chest":
-                return BodyPart.CHEST
-            case "right_arm":
-                return BodyPart.RIGHT_ARM
-            case "left_arm":
-                return BodyPart.LEFT_ARM
-            case "stomach":
-                return BodyPart.STOMACH
-            case "left_leg":
-                return BodyPart.LEFT_LEG
-            case "right_leg":
-                return BodyPart.RIGHT_LEG
-            case "generic":
-                return BodyPart.UNKNOWN
-            case _:
-                if type(location) == str and location:
-                    self.unknown_locations.add(location)
-                return BodyPart.UNKNOWN
 
     def build_event_timeline(self) -> EventTimeline:
         event_timeline = EventTimeline()
@@ -108,7 +88,7 @@ class MatchAssembler:
                 if not events:
                     continue
                 event_timeline.extend_events(events)
-
+        event_timeline.sort_events()
         return event_timeline
 
     def build_tick_store(self) -> TickStore:
@@ -143,9 +123,14 @@ class MatchAssembler:
 
             tick_dict[tick].player_states[row.steamid] = PlayerState(
                 player_steamid=self.steamid_cache[row.steamid],
-                position=Position(row.X, row.Y, row.Z),
-                velocity=Velocity(row.velocity_X, row.velocity_Y, row.velocity_Z),
-                view_angle=ViewAngle(row.yaw, row.pitch),
+                x=row.X,
+                y=row.Y,
+                z=row.Z,
+                velocity_x=row.velocity_X,
+                velocity_y=row.velocity_Y,
+                velocity_z=row.velocity_Z,
+                pitch=row.pitch,
+                yaw=row.yaw,
                 health=row.health,
                 armor=row.armor_value,
                 active_weapon=convert_weapon_name(row.active_weapon_name),
